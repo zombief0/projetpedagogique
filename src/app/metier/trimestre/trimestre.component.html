@@ -1,0 +1,66 @@
+<span>Statut: <strong>{{trimestre.scxStatut}}</strong></span>
+<a nz-dropdown [nzDropdownMenu]="menuOperat" class="pull-right">
+  <span>Opérations</span>
+  <i nz-icon nzType="down"></i>
+</a>
+<nz-dropdown-menu #menuOperat="nzDropdownMenu">
+  <ul nz-menu *ngIf="selectedProjet">
+      <li nz-menu-item *ngIf=" selectedProjet.scxStatut == 'VALIDE'" (click)="showModalChangerStatut()">
+        <span>Changer le statut du trimestre</span>
+      </li>
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      [nzTitle]="modalTitle"
+      [nzContent]="modalContent"
+      [nzFooter]="modalFooter"
+      (nzOnCancel)="handleCancel()"
+    >
+      <ng-template #modalTitle>
+        Changer le statut du trimestre
+      </ng-template>
+
+      <ng-template #modalContent>
+        <nz-radio-group  [(ngModel)]="trimestre.scxStatut">
+          <label nz-radio nzValue="TERMINE"> Terminé</label>
+          <label nz-radio nzValue="NON_TERMINE">Non Terminé</label>
+        </nz-radio-group>
+      </ng-template>
+
+      <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="changerStatut()" [nzLoading]="isConfirmLoading">Valider</button>
+        <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+      </ng-template>
+    </nz-modal>
+    <app-edit-form-trimestre
+      [selectedTrimestre]="trimestre"
+      (updatedTrimestre)="refreshTrimestreAfterUpdate($event)"
+      *ngIf="trimestre && selectedProjet.scxStatut != 'VALIDE'"></app-edit-form-trimestre>
+    <app-add-form-module [selectedTrimestre]="trimestre"
+                         (newModule)="addModuleAfterCreate($event)"
+                         *ngIf="trimestre && selectedProjet.scxStatut != 'VALIDE'"></app-add-form-module>
+    <li nz-menu-item *ngIf="trimestre && selectedProjet.scxStatut != 'VALIDE'"
+        (click)="showDeleteConfirm()">Supprimer le trimestre</li>
+  </ul>
+</nz-dropdown-menu>
+<br>
+<span>Période: <strong>Du {{trimestre.scxDateDebut | date:"yyyy-MM-dd"}} au {{trimestre.scxDateFin | date:"yyyy-MM-dd"}}
+</strong></span>
+<div style="width: 97%;">
+  <nz-progress [nzPercent]="trimestre.scxProgression| number:'1.0-2'"
+               *ngIf="trimestre.scxProgression < 10" [nzStrokeColor]="'red'" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="trimestre.scxProgression| number:'1.0-2'"
+               *ngIf="trimestre.scxProgression >= 10 && trimestre.scxProgression < 100"  [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="trimestre.scxProgression| number:'1.0-2'"
+               *ngIf="trimestre.scxProgression == 100">
+  </nz-progress>
+</div>
+
+<nz-tabset >
+  <nz-tab nzTitle="Module {{module.scxNumero}}" *ngFor="let module of modules">
+    <app-module [selectedProjet]="selectedProjet"
+                [module]="module"
+                (updatedModule)="calculerProgression($event)" (deletedModule)="removeModuleAfterDelete($event)"></app-module>
+  </nz-tab>
+</nz-tabset>

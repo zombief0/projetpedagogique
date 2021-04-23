@@ -1,0 +1,34 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Matiere</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Cours</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <span *ngIf="selectedMatiere == null">Choix de la matiere</span>
+    <span *ngIf="selectedMatiere != null"> {{selectedMatiere.scxLibelle}}</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu *ngFor="let matiere of matieres">
+      <li nz-menu-item (click)="selectMatiere(matiere)">{{matiere.scxLibelle}}</li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <a nz-dropdown [nzDropdownMenu]="menuOP" class="pull-right">
+    <span>Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menuOP="nzDropdownMenu">
+    <ul nz-menu >
+      <app-add-form-matiere (newMatiere)="addMatiereAfterCreate($event)"></app-add-form-matiere>
+      <app-edit-form-matiere [selectedMatiere]="selectedMatiere"
+                             *ngIf="selectedMatiere" (updatedMatiere)="refreshMatiereAfterUpdate($event)"></app-edit-form-matiere>
+      <app-add-form-cours [selectedMatiere]="selectedMatiere"
+                          (newCours)="addCoursAfterCreate($event)" *ngIf="selectedMatiere"></app-add-form-cours>
+      <li nz-menu-item *ngIf="selectedMatiere" (click)="showDeleteConfirm()">Supprimer la matière sélectionnée</li>
+    </ul>
+  </nz-dropdown-menu>
+  <div style="margin-top: 2%">
+    <app-cours *ngFor="let cour of cours" [cours]="cour" (deletedCours)="removeCoursAfterDelete($event)"></app-cours>
+  </div>
+</div>

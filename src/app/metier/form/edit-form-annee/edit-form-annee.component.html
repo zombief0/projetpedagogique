@@ -1,0 +1,37 @@
+<li nz-menu-item (click)="showModal()">
+  <span>Editer</span>
+</li>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    Editer
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="handleOkAndSubmit()" >
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="periode" nzRequired>Période</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-range-picker formControlName="periode" nzShowTime></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+  </ng-template>
+</nz-modal>
+
+
+

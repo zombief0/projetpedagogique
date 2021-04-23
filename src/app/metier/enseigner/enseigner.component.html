@@ -1,0 +1,56 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>
+    Affectations
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <a nz-dropdown [nzDropdownMenu]="menu">
+      <span *ngIf="selectedAnnee == null">Choix de l'année</span>
+      <span *ngIf="selectedAnnee != null"> {{selectedAnnee.scxDateDebut | date:'yyyy'}}-{{selectedAnnee.scxDateFin | date:'yyyy'}}</span>
+      <i nz-icon nzType="down"></i>
+    </a>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu *ngFor="let annee of annees">
+    <li nz-menu-item (click)="selectAnnee(annee)">
+      {{annee.scxDateDebut | date:'yyyy'}}-{{annee.scxDateFin | date: 'yyyy'}}
+    </li>
+  </ul>
+</nz-dropdown-menu>
+
+<div class="inner-content">
+  <app-add-form-enseigner [selectedAnnee]="selectedAnnee"
+                          (newEnseigner)="addEnseignerAfterCreate($event)" *ngIf="selectedAnnee"></app-add-form-enseigner>
+  <nz-table *ngIf="selectedAnnee">
+    <thead>
+      <tr>
+        <th>Enseignant</th>
+        <th>Cours</th>
+        <th>Salle</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let enseigner of enseigners">
+      <td>
+        <span *ngIf="enseigner.enseignant.scxSexe == 'MASCULIN'">M. </span>
+        <span *ngIf="enseigner.enseignant.scxSexe == 'FEMININ'">Mme. </span>
+        {{enseigner.enseignant.scxNom}} {{enseigner.enseignant.scxPrenom}}
+      </td>
+      <td>
+        {{enseigner.coursDTO.scxLibelle}}
+      </td>
+      <td>
+        {{enseigner.salleDTO.scxLibelle}}<br>
+        <span *ngIf="enseigner.salleDTO.serie != null">{{enseigner.salleDTO.serie.scxLibelle}}</span><br>
+        <span *ngIf="enseigner.salleDTO.specialite != null">{{enseigner.salleDTO.specialite.scxLibelle}}</span><br>
+      </td>
+      <td>
+        <button nz-button nzType="danger"
+            (click)="showDeleteConfirm(enseigner)" *ngIf="enseigner">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>

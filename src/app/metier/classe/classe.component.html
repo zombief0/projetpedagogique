@@ -1,0 +1,24 @@
+<nz-card nzTitle="Classe de {{classe.scxLibelle}}" >
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <span *ngIf="selectedAnnee == null">Choix de l'année</span>
+    <span *ngIf="selectedAnnee != null"> {{selectedAnnee.scxDateDebut | date:'yyyy'}}-{{selectedAnnee.scxDateFin | date:'yyyy'}}</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <app-edit-form-classe
+    [selectedClasse]="classe"
+    *ngIf="classe"
+    (updatedClasse)="refreshClasseAfterUpdate($event)"></app-edit-form-classe>
+  <button nz-button nzType="danger" *ngIf="classe" (click)="showDeleteConfirm()" class="pull-right">Supprimer</button>
+  <app-add-form-salle [selectedClasse]="classe"
+                      *ngIf="classe && selectedAnnee"
+                      (newSalle)="addSalleAfterCreate($event)" [selectedAnnee]="selectedAnnee"></app-add-form-salle>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu *ngFor="let annee of annees">
+      <li nz-menu-item (click)="selectAnnee(classe,annee)">
+        {{annee.scxDateDebut | date:'yyyy'}}-{{annee.scxDateFin | date: 'yyyy'}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+  <app-salle *ngFor="let salle of salles" [salle]="salle" (deletedSalle)="removeSalleAfterDelete($event)"></app-salle>
+</nz-card>
+

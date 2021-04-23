@@ -1,0 +1,38 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>
+    Années Académiques
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+  <app-add-form-annee (newAnnee)="addAnneeAfterCreate($event)"></app-add-form-annee>
+  <nz-table >
+    <thead>
+      <tr>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let annee of annees">
+        <td>{{annee.scxDateDebut| date:"yyyy-MM-dd"}}</td>
+        <td>{{annee.scxDateFin| date:"yyyy-MM-dd"}}</td>
+        <td>
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            <span>Opérations</span>
+            <i nz-icon nzType="down"></i>
+          </a>
+
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu >
+              <app-edit-form-annee [selectedAnnee]="annee" *ngIf="annee"
+                                   (updatedAnnee)="refreshAnneeAfterUpdate($event)" ></app-edit-form-annee>
+              <li nz-menu-item
+                  (click)="showDeleteConfirm(annee)" *ngIf="annee">Supprimer l'année</li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

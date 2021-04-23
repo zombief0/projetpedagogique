@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import {Cycle} from "./models/cycle";
+import {CycleService} from "./services/cycle/cycle.service";
+import {ClasseService} from "./services/classe/classe.service";
+import {Classe} from "./models/classe";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +10,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'gestioneleves-ng-app';
+  isCollapsed = false;
+
+  constructor() { }
+
+
+
 }

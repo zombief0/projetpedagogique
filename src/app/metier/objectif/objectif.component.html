@@ -1,0 +1,28 @@
+<button nz-button nzType="primary" (click)="showModal()">
+  <span>Objectifs</span>
+</button>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleFermer()"
+>
+  <ng-template #modalTitle>
+     Liste des objectifs
+  </ng-template>
+
+  <ng-template #modalContent>
+    <ul *ngFor="let objectif of objectifs">
+      <li>{{objectif.scxLibelle}}</li>
+    </ul>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-add-form-objectif [selectedActivite]="selectedActivite" (newObjectif)="addObjectifAfterCreate($event)"></app-add-form-objectif>
+    <button nz-button nzType="default" (click)="handleFermer()">Fermer</button>
+  </ng-template>
+</nz-modal>
+
+
+

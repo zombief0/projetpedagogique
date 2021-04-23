@@ -1,0 +1,46 @@
+.logo {
+  height: 65px;
+  background: black;
+  width: 200px;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+  float: right;
+}
+
+nz-content {
+  margin: 0 16px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  min-height: 360px;
+}
+
+nz-footer {
+  text-align: center;
+}
+
+header{
+  background: black;
+  color:#ffffff;
+  padding-bottom: 30px;
+  min-height:70px;
+  border-bottom:dodgerblue 3px solid;
+  margin-bottom: 10px;
+}
+
+.highlight{
+  color:dodgerblue;
+}
+
+.highlight2{
+  color:snow;
+}

@@ -1,0 +1,39 @@
+<a nz-dropdown [nzDropdownMenu]="menuOp" style="margin-top: 2%;" class="pull-right;">
+  <span>Opérations</span>
+  <i nz-icon nzType="down"></i>
+</a>
+
+<nz-dropdown-menu #menuOp="nzDropdownMenu">
+  <ul nz-menu>
+    <app-edit-form-suivi
+      [salle]="salle"
+      [selectedCours]="cours"
+      [selectedAnnee]="annee"
+      [selectedSuivi]="suivi" (updateSuivi)="refreshSuiviAfterUpdate($event)" *ngIf="suivi"></app-edit-form-suivi>
+    <app-add-form-trimestre [selectedSuivi]="suivi"
+                            (newTrimestre)="addTrimestreAfterCreate($event)" *ngIf="suivi"></app-add-form-trimestre>
+    <li nz-menu-item  *ngIf="selectedProjet" (click)="showDeleteConfirm()">Supprimer</li>
+  </ul>
+</nz-dropdown-menu>
+<span style="margin-left: 40%; font-weight: bolder;" *ngIf="enseigner">Enseignant: {{enseigner.enseignant.scxNom}}  {{enseigner.enseignant.scxPrenom}}</span>
+<div style="width: 97%;">
+  <nz-progress [nzPercent]="suivi.scxProgression| number:'1.0-2'"
+               *ngIf="suivi.scxProgression < 10" [nzStrokeColor]="'red'" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="suivi.scxProgression| number:'1.0-2'"
+               *ngIf="suivi.scxProgression >= 10 && suivi.scxProgression < 100" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="suivi.scxProgression| number:'1.0-2'"
+               *ngIf="suivi.scxProgression == 100">
+  </nz-progress>
+</div>
+
+
+<nz-tabset [nzSize]="size">
+      <nz-tab nzTitle="Trimestre {{trimestre.scxNumero}}" *ngFor="let trimestre of trimestres">
+        <app-trimestre [trimestre]="trimestre"
+                       (updatedTrimestre)="calculerProgression($event)"
+                       [selectedProjet]="selectedProjet"
+                       (deletedTrimestre)="removeTrimestreAfterDelete($event)"></app-trimestre>
+      </nz-tab>
+</nz-tabset>

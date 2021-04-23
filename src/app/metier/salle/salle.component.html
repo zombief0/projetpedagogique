@@ -1,0 +1,21 @@
+<nz-card nzType="inner" style="margin-top: 16px;" nzTitle="{{salle.scxLibelle}}" [nzExtra]="extraTemplate" (mouseenter)="selectSalle(salle)">
+  <a nz-dropdown [nzDropdownMenu]="menuOP" class="pull-right">
+    <span>Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menuOP="nzDropdownMenu">
+    <ul nz-menu >
+      <app-edit-form-salle
+        [selectedSalle]="selectedSalle"
+        *ngIf="selectedSalle"
+        (updatedSalle)="refreshSalleAfterUpdate($event)"></app-edit-form-salle>
+      <li nz-menu-item *ngIf="selectedSalle" (click)="showDeleteConfirm()">Supprimer</li>
+    </ul>
+  </nz-dropdown-menu>
+  <p>{{salle.scxDescription}}</p>
+  <span *ngIf="salle.specialite"> Option {{salle.specialite.scxLibelle}}</span>
+  <span *ngIf="salle.serie"> Serie {{salle.serie.scxLibelle}}</span>
+</nz-card>
+<ng-template #extraTemplate>
+  <a>Plus</a>
+</ng-template>

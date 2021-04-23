@@ -1,0 +1,32 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Cycle</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <span *ngIf="selectedCycle == null">Choix du cycle</span>
+    <span *ngIf="selectedCycle != null"> {{selectedCycle.scxLibelle}}</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu *ngFor="let cycle of cycles">
+      <li nz-menu-item (click)="selectCycle(cycle)">{{cycle.scxLibelle}}</li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <a nz-dropdown [nzDropdownMenu]="menuOP" class="pull-right">
+    <span>Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menuOP="nzDropdownMenu">
+    <ul nz-menu >
+      <app-form-cycle  (newCycle)="addCycleAfterCreate($event)"></app-form-cycle>
+      <app-editform-cycle [selectedCycle]="selectedCycle" *ngIf="selectedCycle" (updatedCycle)="addCycleAfterUpdate($event)"></app-editform-cycle>
+      <li nz-menu-item *ngIf="selectedCycle" (click)="showDeleteConfirm()">Supprimer le cycle sélectionné</li>
+      <app-add-form-classe [selectedCycle]="selectedCycle" *ngIf="selectedCycle" (newClasse)="addClasseAfterCreate($event)"></app-add-form-classe>
+    </ul>
+  </nz-dropdown-menu>
+
+  <div style="margin-top: 2%">
+    <app-classe *ngFor="let classe of classes" [classe]="classe" (deletedClasse)="removeClasseAfterDelete($event)"></app-classe>
+  </div>
+</div>

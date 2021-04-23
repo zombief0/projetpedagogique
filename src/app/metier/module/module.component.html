@@ -1,0 +1,42 @@
+<a nz-dropdown [nzDropdownMenu]="menuOperat" class="pull-right">
+  <span>Opérations</span>
+  <i nz-icon nzType="down"></i>
+</a>
+<nz-dropdown-menu #menuOperat="nzDropdownMenu">
+  <ul nz-menu *ngIf="selectedProjet">
+      <app-edit-form-module [selectedModule]="module"
+                            (updatedModule)="refreshModuleAfterUpdate($event)"
+                            *ngIf="module && selectedProjet.scxStatut !='VALIDE'">
+      </app-edit-form-module>
+      <app-add-form-chapitre [selectedModule]="module"
+                             (newChapitre)="addChapitreAfterCreate($event)"
+                             *ngIf="module && selectedProjet.scxStatut !='VALIDE'">
+      </app-add-form-chapitre>
+      <li nz-menu-item *ngIf="module && selectedProjet.scxStatut != 'VALIDE'"
+        (click)="showDeleteConfirm()">Supprimer le module</li>
+  </ul>
+</nz-dropdown-menu>
+
+<div style="width: 97%;">
+  <nz-progress [nzPercent]="module.scxProgression| number:'1.0-2'"
+               *ngIf="module.scxProgression < 10" [nzStrokeColor]="'red'" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="module.scxProgression| number:'1.0-2'"
+               *ngIf="module.scxProgression >= 10 && module.scxProgression < 100" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="module.scxProgression| number:'1.0-2'"
+               *ngIf="module.scxProgression == 100">
+  </nz-progress>
+</div>
+<nz-descriptions style="margin-top: 2%;" nzTitle="Informations du module" nzBordered [nzColumn]="{xxl:4,xl: 3, lg: 3, md:3, sm:2, xs:1}">
+  <nz-descriptions-item nzTitle="Titre du module">{{module.scxLibelle}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Description du module">{{module.scxDescription}}</nz-descriptions-item>
+</nz-descriptions><br>
+<nz-tabset >
+  <nz-tab nzTitle="Chapitre {{chapitre.scxNumero}}" *ngFor="let chapitre of chapitres">
+    <app-chapitre [chapitre]="chapitre"
+                  (updatedChapitre)="calculProgression($event)"
+                  [selectedProjet]="selectedProjet"
+                  (deletedChapitre)="removeChapitreAfterDelete($event)"></app-chapitre>
+  </nz-tab>
+</nz-tabset>

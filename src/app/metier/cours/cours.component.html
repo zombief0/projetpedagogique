@@ -1,0 +1,18 @@
+<nz-card  nzTitle="{{cours.scxLibelle}}" [nzExtra]="extraTemplate" style="margin-top: 2%">
+  <a nz-dropdown [nzDropdownMenu]="menuOP" class="pull-right">
+    <span>Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menuOP="nzDropdownMenu">
+    <ul nz-menu >
+      <app-edit-form-cours [selectedCours]="cours"
+                           *ngIf="cours && classeCours"
+                           (updateCours)="refreshCoursAfterUpdate($event)" [classe]="classeCours"></app-edit-form-cours>
+      <li nz-menu-item *ngIf="cours" (click)="showDeleteConfirm()">Supprimer</li>
+    </ul>
+  </nz-dropdown-menu>
+  <p>{{cours.scxDescription}} <b>{{cours.scxNature}}</b></p>
+</nz-card>
+<ng-template #extraTemplate>
+  <a>Plus</a>
+</ng-template>

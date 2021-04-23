@@ -1,0 +1,49 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>
+    Enseignants
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+  <app-add-form-enseignant (newEnseignant)="addEnseignantAfterCreate($event)"></app-add-form-enseignant>
+  <nz-table >
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Prenom</th>
+      <th>Sexe</th>
+      <th>Email</th>
+      <th>Téléphone</th>
+      <th>Discipline</th>
+      <th>Date de prise de service</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let enseignant of enseignants">
+        <td>{{enseignant.scxNom}}</td>
+        <td>{{enseignant.scxPrenom}}</td>
+        <td>{{enseignant.scxSexe}}</td>
+        <td>{{enseignant.scxEmail}}</td>
+        <td>{{enseignant.scxTelephone}}</td>
+        <td>{{enseignant.scxDiscipline}}</td>
+        <td>{{enseignant.scxDatePriseService| date:"yyyy-MM-dd"}}</td>
+        <td>
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            <span>Opérations</span>
+            <i nz-icon nzType="down"></i>
+          </a>
+
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu >
+              <app-edit-form-enseignant [selectedEnseignant]="enseignant"
+                                        *ngIf="enseignant"
+                                        (updatedEnseignant)="refreshEnseignantAfterUpdate($event)"></app-edit-form-enseignant>
+              <li nz-menu-item
+                  (click)="showDeleteConfirm(enseignant)" *ngIf="enseignant">Supprimer</li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

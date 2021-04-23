@@ -1,0 +1,35 @@
+<li nz-menu-item (click)="showModal()">
+  <span>Ajouter une matière</span>
+</li>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    Ajout d'une matière
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="handleOkAndSubmit()" >
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Veuillez entrer le nom de la matière" >
+          <nz-input-group nzPrefixIcon="read">
+            <input formControlName="libelle"  nz-input placeholder="Entrez le nom de la matière"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+  </ng-template>
+</nz-modal>

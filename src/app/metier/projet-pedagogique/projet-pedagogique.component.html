@@ -1,0 +1,125 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Projet Pédagogiques</nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <a nz-dropdown [nzDropdownMenu]="menu">
+      <span *ngIf="selectedAnnee == null">Choix de l'année</span>
+      <span *ngIf="selectedAnnee != null"> {{selectedAnnee.scxDateDebut | date:'yyyy'}}-{{selectedAnnee.scxDateFin | date:'yyyy'}}</span>
+      <i nz-icon nzType="down"></i>
+    </a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <a nz-dropdown [nzDropdownMenu]="menuMatiere">
+      <span *ngIf="selectedMatiere == null">Choix de la matière</span>
+      <span *ngIf="selectedMatiere != null"> {{selectedMatiere.scxLibelle}}</span>
+      <i nz-icon nzType="down"></i>
+    </a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <a nz-dropdown [nzDropdownMenu]="menuCours" *ngIf="selectedMatiere">
+      <span *ngIf="selectedCours == null">Choix du cours</span>
+      <span *ngIf="selectedCours != null"> {{selectedCours.scxLibelle}}</span>
+      <i nz-icon nzType="down"></i>
+    </a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>
+    <a nz-dropdown [nzDropdownMenu]="menuProjet" *ngIf="selectedCours && selectedAnnee">
+      <span *ngIf="selectedProjet == null">Choix du projet</span>
+      <span *ngIf="selectedProjet != null"> {{selectedProjet.scxDescription}}</span>
+      <i nz-icon nzType="down"></i>
+    </a>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="inner-content">
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu *ngFor="let annee of annees">
+      <li nz-menu-item (click)="selectAnnee(annee)">
+        {{annee.scxDateDebut | date:'yyyy'}}-{{annee.scxDateFin | date: 'yyyy'}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuMatiere="nzDropdownMenu">
+    <ul nz-menu *ngFor="let matiere of matieres">
+      <li nz-menu-item (click)="selectMatiere(matiere)">
+        {{matiere.scxLibelle}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuCours="nzDropdownMenu">
+    <ul nz-menu *ngFor="let cour of cours">
+      <li nz-menu-item (click)="selectCours(cour)">
+        {{cour.scxLibelle}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <nz-dropdown-menu #menuProjet="nzDropdownMenu">
+    <ul nz-menu *ngFor="let projet of projets">
+      <li nz-menu-item (click)="selectProjet(projet)">
+        {{projet.scxDescription}}-{{projet.scxStatut}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <span *ngIf="selectedProjet">Statut: {{selectedProjet.scxStatut}}</span>
+
+  <a nz-dropdown *ngIf="selectedCours && selectedAnnee" [nzDropdownMenu]="menuOperations" class="pull-right">
+    <span>Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menuOperations="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item *ngIf="selectedProjet" (click)="showModalChangerStatut()">
+        <span>Changer le statut du projet</span>
+      </li>
+        <nz-modal
+          [(nzVisible)]="isVisible"
+          [nzTitle]="modalTitle"
+          [nzContent]="modalContent"
+          [nzFooter]="modalFooter"
+          (nzOnCancel)="handleCancel()"
+        >
+          <ng-template #modalTitle>
+            Changer le statut du projet
+          </ng-template>
+
+          <ng-template #modalContent>
+            <nz-radio-group  [(ngModel)]="selectedProjet.scxStatut">
+              <label nz-radio nzValue="VALIDE"> Validé</label>
+              <label nz-radio nzValue="NON_VALIDE">Non Valide</label>
+              <label nz-radio nzValue="ATTENTE">En Attente</label>
+            </nz-radio-group>
+          </ng-template>
+
+          <ng-template #modalFooter>
+            <button nz-button nzType="default" (click)="changerStatut()" [nzLoading]="isConfirmLoading">Valider</button>
+            <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+          </ng-template>
+        </nz-modal>
+      <app-add-form-projet [selectedCours]="selectedCours"
+                           [selectedAnnee]="selectedAnnee"
+                           (newProjet)="addProjetAfterCreate($event)" *ngIf="selectedAnnee && selectedCours">
+      </app-add-form-projet>
+      <app-edit-form-projet [selectedProjet]="selectedProjet"
+                            (updateProjet)="refreshProjetAfterUpdate($event)" *ngIf="selectedProjet">
+      </app-edit-form-projet>
+      <app-add-form-suivi
+        [selectedProjet]="selectedProjet"
+        *ngIf="selectedProjet" (newSuivi)="addSuiviAfterCreate($event)"
+        [selectedAnnee]="selectedAnnee" [selectedCours]="selectedCours"></app-add-form-suivi>
+      <li nz-menu-item  *ngIf="selectedProjet" (click)="showDeleteConfirm()">Supprimer</li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <nz-tabset>
+    <nz-tab *ngFor="let suivi of suivis"  nzTitle="Suivi de la salle {{suivi.scxNomSalle}}">
+      <app-suivi-projet-pedagogique  [suivi]="suivi"
+                                     [selectedProjet]="selectedProjet"
+                                     [cours]="selectedCours"
+                                     [annee]="selectedAnnee" (deletedSuivi)="removeSuiviAfterDelete($event)"></app-suivi-projet-pedagogique>
+    </nz-tab>
+  </nz-tabset>
+</div>
+

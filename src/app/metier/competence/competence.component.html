@@ -1,0 +1,25 @@
+<button nz-button nzType="primary" (click)="showModal()">
+  <span>Competence</span>
+</button>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleFermer()"
+>
+  <ng-template #modalTitle>
+    Liste des competences
+  </ng-template>
+
+  <ng-template #modalContent>
+    <ul *ngFor="let competence of competences">
+      <li>{{competence.scxLibelle}}</li>
+    </ul>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <app-add-form-competence [selectedChapitre]="selectedChapitre" (newCompetence)="addCompetenceAfterCreate($event)"></app-add-form-competence>
+    <button nz-button nzType="default" (click)="handleFermer()">Fermer</button>
+  </ng-template>
+</nz-modal>

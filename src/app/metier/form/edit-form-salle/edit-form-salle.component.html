@@ -1,0 +1,75 @@
+<li nz-menu-item (click)="showModal()">
+  <span>Editer</span>
+</li>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    Editer
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="handleOkAndSubmit()" >
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="libelle">Libellé</nz-form-label>
+        <nz-form-control nzErrorTip="Veuillez entrer le nom de la salle"  [nzSm]="17" [nzXs]="25">
+          <input formControlName="libelle" nz-input placeholder="Entrez le nom de la salle"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description">Description</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+            <textarea
+              nz-input
+              placeholder="Entrez une description"
+              nzAutosize formControlName="description" >
+            </textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="Serie">Serie</nz-form-label>
+        <nz-form-control  [nzSm]="17" [nzXs]="25">
+          <nz-radio-group formControlName="serie">
+            <label *ngFor="let serie of series" nz-radio [nzValue]="serie">{{serie.scxLibelle}}</label>
+            <label nz-radio [nzValue]="null">Aucune</label>
+
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="Specialite">Spécialité</nz-form-label>
+        <nz-form-control  [nzSm]="17" [nzXs]="25">
+          <nz-radio-group formControlName="specialite" >
+            <label *ngFor="let specialite of specialites" nz-radio [nzValue]="specialite">{{specialite.scxLibelle}}</label>
+            <label nz-radio [nzValue]="null">Aucune</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+      <!--<nz-form-item>
+        <nz-form-control>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="serie">Serie</nz-form-label>
+          <nz-select style="width: 120px;" nzAllowClear formControlName="serie" >
+            <nz-option  [nzValue]="series[2]" [nzLabel]="series[2].scxLibelle"></nz-option>
+            <nz-option  [nzValue]="serie[0]" [nzLabel]="series[0].scxLibelle"></nz-option>
+            <nz-option  [nzValue]="serie[1]" [nzLabel]="series[1].scxLibelle"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>-->
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+  </ng-template>
+</nz-modal>
+
+

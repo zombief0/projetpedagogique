@@ -1,0 +1,41 @@
+<li nz-menu-item (click)="showModal()">
+  <span>Ajouter un trimestre</span>
+</li>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    Ajout d'un trimestre
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="handleOkAndSubmit()" >
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="numero">Numéro</nz-form-label>
+        <nz-form-control nzErrorTip="Veuillez entrer le numéro du trimestre"  [nzSm]="17" [nzXs]="25">
+          <nz-input-number formControlName="numero"  [nzMin]="1" [nzMax]="5" [nzStep]="1"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="periode" nzRequired>Période</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-range-picker formControlName="periode" nzShowTime></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+  </ng-template>
+</nz-modal>
+

@@ -1,0 +1,80 @@
+<li nz-menu-item (click)="showModal()">
+  <span>Editer</span>
+</li>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    Editer
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="handleOkAndSubmit()" >
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="libelle">Libellé</nz-form-label>
+        <nz-form-control nzErrorTip="Veuillez entrer le libellé du cours"  [nzSm]="17" [nzXs]="25">
+          <input formControlName="libelle" nz-input/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="classe" nzRequired>Classe</nz-form-label>
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            <span *ngIf="selectedCycle == null">Choix du cycle</span>
+            <span *ngIf="selectedCycle != null"> {{selectedCycle.scxLibelle}}</span>
+            <i nz-icon nzType="down"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu *ngFor="let cycle of cycles">
+              <li nz-menu-item (click)="selectCycle(cycle)">{{cycle.scxLibelle}}</li>
+            </ul>
+          </nz-dropdown-menu>
+
+          <nz-select style="width: 200px;" nzAllowClear formControlName="classe" [compareWith]="compareClasse">
+            <nz-option *ngFor="let classe of classes"
+                       [nzValue]="classe" [nzLabel]="classe.scxLibelle"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="description">Description</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+            <textarea
+              nz-input
+              placeholder="Entrez une description"
+              nzAutosize formControlName="description" >
+            </textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="coefficient" nzRequired>Coefficient</nz-form-label>
+        <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-input-number formControlName="coefficient" [nzMin]="1" [nzMax]="10" [nzStep]="1"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="nature">Nature</nz-form-label>
+        <nz-form-control nzErrorTip="Veuillez choisir la nature du cours"  [nzSm]="17" [nzXs]="25">
+          <nz-radio-group formControlName="nature">
+            <label nz-radio nzValue="OBLIGATOIRE">Obligatoire</label>
+            <label nz-radio nzValue="FACULTATIF">Facultatif</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Enregistrer</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Annuler</button>
+  </ng-template>
+</nz-modal>
+

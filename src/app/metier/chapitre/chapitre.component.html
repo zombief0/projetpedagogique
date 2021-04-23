@@ -1,0 +1,84 @@
+<a nz-dropdown [nzDropdownMenu]="menuOperat" class="pull-right">
+  <span>Opérations</span>
+  <i nz-icon nzType="down"></i>
+</a>
+<nz-dropdown-menu #menuOperat="nzDropdownMenu">
+  <ul nz-menu *ngIf="selectedProjet">
+    <app-edit-form-chapitre [selectedChapitre]="chapitre"
+                            (updatedChapitre)="refreshChapitreAfterUpdate($event)"
+                            *ngIf="chapitre && selectedProjet.scxStatut != 'VALIDE'">
+    </app-edit-form-chapitre>
+    <app-add-form-competence
+      [selectedChapitre]="chapitre" *ngIf="chapitre && selectedProjet.scxStatut != 'VALIDE'"
+      (newCompetence)="addCompetenceAfterCreate($event)"></app-add-form-competence>
+    <app-add-form-activite [selectedChapitre]="chapitre"
+                           (newActivite)="addActiviteAfterCreate($event)"
+                           *ngIf="chapitre && selectedProjet.scxStatut != 'VALIDE'">
+    </app-add-form-activite>
+    <li nz-menu-item *ngIf="chapitre && selectedProjet.scxStatut != 'VALIDE'"
+        (click)="showDeleteConfirm()">Supprimer le chapitre</li>
+  </ul>
+</nz-dropdown-menu>
+
+<div style="width: 97%;">
+  <nz-progress [nzPercent]="chapitre.scxProgression| number:'1.0-2'"
+               *ngIf="chapitre.scxProgression < 10" [nzStrokeColor]="'red'" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="chapitre.scxProgression| number:'1.0-2'"
+               *ngIf="chapitre.scxProgression >= 10 && chapitre.scxProgression < 100" [nzStatus]="'active'">
+  </nz-progress>
+  <nz-progress [nzPercent]="chapitre.scxProgression| number:'1.0-2'"
+               *ngIf="chapitre.scxProgression == 100" >
+  </nz-progress>
+</div>
+<nz-descriptions style="margin-top: 2%;" nzTitle="Informations du chapitre" nzBordered [nzColumn]="{xxl:4,xl: 3, lg: 3, md:3, sm:2, xs:1}">
+  <nz-descriptions-item nzTitle="Titre du chapitre">{{chapitre.scxLibelle}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Description du chapitre">{{chapitre.scxDescription}}</nz-descriptions-item>
+</nz-descriptions>
+<br>
+<app-competence [selectedChapitre]="chapitre" *ngIf="chapitre"></app-competence>
+
+<nz-table *ngIf="selectedProjet">
+  <thead>
+    <tr>
+      <th>Leçon</th>
+      <th>Description</th>
+      <th>Nature</th>
+      <th>Statut</th>
+      <th *ngIf="selectedProjet.scxStatut != 'VALIDE'">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let activite of activites">
+      <td>Leçon {{activite.scxNumero}} : {{activite.scxLibelle}}<br>
+        <app-objectif [selectedActivite]="activite"></app-objectif>
+      </td>
+      <td>{{activite.scxDescription}}</td>
+      <td *ngIf="activite.scxType == 'TRAVAUX_PRATIQUES'">Pratique</td>
+      <td *ngIf="activite.scxType == 'TRAVAUX_THEORIQUES'">Théorique</td>
+      <td>
+        <nz-radio-group [(ngModel)]="activite.scxStatut" *ngIf="selectedProjet">
+          <label nz-radio nzValue="TERMINE"> Terminé</label>
+          <label nz-radio nzValue="NON_TERMINE">Non Terminé</label><br>
+          <button nz-button nzType="default" *ngIf="selectedProjet.scxStatut == 'VALIDE'" (click)="updateActivite(activite)">Valider</button>
+        </nz-radio-group>
+      </td>
+      <td>
+        <a nz-dropdown [nzDropdownMenu]="menuOperation" class="pull-right" *ngIf="selectedProjet.scxStatut != 'VALIDE'">
+          <span>Opérations</span>
+          <i nz-icon nzType="down"></i>
+        </a>
+        <nz-dropdown-menu #menuOperation="nzDropdownMenu">
+          <ul nz-menu *ngIf="selectedProjet">
+            <app-edit-form-activite [selectedActivite]="activite"
+                                    *ngIf="activite && selectedProjet.scxStatut != 'VALIDE'"
+                                    (updatedActivite)="refreshActiviteAfterUpdate($event)">
+            </app-edit-form-activite>
+            <li nz-menu-item *ngIf="activite && selectedProjet.scxStatut != 'VALIDE'"
+                (click)="showDeleteConfirmActivite(activite)">Supprimer la leçon</li>
+          </ul>
+        </nz-dropdown-menu>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

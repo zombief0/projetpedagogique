@@ -1,0 +1,24 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Série</nz-breadcrumb-item>
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <span > Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu >
+      <app-add-form-serie (newSerie)="addSerieAfterCreate($event)"></app-add-form-serie>
+      <app-edit-form-serie (updatedSerie)="refreshSerieAfterUpdate($event)"
+      [selectedSerie]="selectedSerie" *ngIf="selectedSerie"></app-edit-form-serie>
+      <li nz-menu-item *ngIf="selectedSerie" (click)="showDeleteConfirm()">Supprimer la série {{selectedSerie.scxLibelle}}</li>
+    </ul>
+  </nz-dropdown-menu>
+</nz-breadcrumb>
+<div class="inner-content">
+  <nz-carousel [nzEffect]="effect">
+    <div nz-carousel-content *ngFor="let serie of series" (mouseenter)="selectSerie(serie)">
+      <h1 style="padding-top: 15%;">{{serie.scxLibelle}}</h1>
+      <small>{{serie.scxDescription}}</small>
+    </div>
+  </nz-carousel>
+</div>
+

@@ -1,0 +1,23 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Specialite</nz-breadcrumb-item>
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <span > Opérations</span>
+    <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu >
+      <app-add-specialite-form (newSpecialite)="addSpecialiteAfterCreate($event)"></app-add-specialite-form>
+      <app-edit-form-specialite (updatedSpecialite)="refreshSpecialiteAfterUpdate($event)"
+                                [selectedSpecialite]="selectedSpecialite" *ngIf="selectedSpecialite"></app-edit-form-specialite>
+      <li nz-menu-item *ngIf="selectedSpecialite" (click)="showDeleteConfirm()">Supprimer la spécialité {{selectedSpecialite.scxLibelle}}</li>
+    </ul>
+  </nz-dropdown-menu>
+</nz-breadcrumb>
+<div class="inner-content">
+<nz-carousel [nzEffect]="effect">
+  <div nz-carousel-content *ngFor="let specialite of specialites" (mouseenter)="selectSpecialite(specialite)">
+    <h1 style="padding-top: 15%;">{{specialite.scxLibelle}}</h1>
+    <small>{{specialite.scxDescription}}</small>
+  </div>
+</nz-carousel>
+</div>
